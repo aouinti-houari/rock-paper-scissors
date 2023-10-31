@@ -1,8 +1,10 @@
+let buttons = document.querySelectorAll(".btn");
 let game = 0;
 let playerScore = 0;
 let computerScore = 0;
 
 function playRound(player, computer) {
+    game++;
     if (player === computer) return "It's a tie!";
     else if (
         (player === "Rock" && computer === "Scissors") ||
@@ -17,26 +19,28 @@ function playRound(player, computer) {
     }
 }
 
-function playerChoice() {
-    const user = prompt("Rock, Paper, or Scissors?");
-    return user ? user.charAt(0).toUpperCase() + user.slice(1).toLowerCase() : null;
-}
-
 function getComputerChoice() {
     const game = ["Rock", "Paper", "Scissors"];
     return game[Math.floor(Math.random() * game.length)];
 }
 
-while (game < 5) {
-    const player = playerChoice();
-    const computer = getComputerChoice();
-    console.log(playRound(player, computer));
-    game++;
-    if (game === 5) {
-        console.log(playerScore > computerScore ?
-            `You win, your score is ${playerScore} and the computer score is ${computerScore}` :
-            playerScore < computerScore ?
-                `You lose, your score is ${playerScore} and the computer score is ${computerScore}` :
-                `It's a tie!, your score is ${playerScore} and the computer score is ${computerScore}`);
-    }
-}
+buttons.forEach((button) =>
+    button.addEventListener("click", function (e) {
+        let clickedButton = e.target.innerText;
+        let result = document.querySelector(".result");
+        const computer = getComputerChoice();
+        if (game < 5) result.innerHTML = "";
+        playRound(clickedButton, computer);
+        if (game === 5) {
+            result.innerText =
+                playerScore > computerScore
+                    ? `Your score is ${playerScore} and the computer score is ${computerScore}, you win!`
+                    : playerScore < computerScore
+                        ? `Your score is ${playerScore} and the computer's score is ${computerScore}, you lose!`
+                        : `Your score is ${playerScore} and the computer's is ${computerScore}, it's a tie.`;
+            game = 0;
+            playerScore = 0;
+            computerScore = 0;
+        }
+    })
+);
